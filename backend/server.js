@@ -10,8 +10,9 @@ const app = express();
 const server = http.createServer(app);
 
 const allowedOrigins = [
-  "http://localhost:5173",
-  "https://disaster-be-j9jy.vercel.app"
+ 
+  "https://disaster-be-j9jy.vercel.app",
+  "https://disaster-be-m7ge.vercel.app"
 ];
 
 const io = new Server(server, {
