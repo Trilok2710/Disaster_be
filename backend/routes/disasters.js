@@ -34,7 +34,9 @@ router.post('/', async (req, res) => {
 
   try {
     // Step 1: Geocode the description to get coordinates and location name
-    const geocodeResponse = await axios.post(`${process.env.API_BASE_URL}/geocode`, { description });
+    const geocodeResponse = await axios.post(`${process.env.API_BASE_URL}/geocode`, { description }, {
+      headers: { Authorization: 'Bearer netrunnerX' }
+    });
     const { lat, lon, location_name } = geocodeResponse.data;
 
     if (!lat || !lon) {
