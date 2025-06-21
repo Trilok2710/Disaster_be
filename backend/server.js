@@ -8,14 +8,20 @@ const axios = require('axios');
 
 const app = express();
 const server = http.createServer(app);
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://disaster-be-j9jy.vercel.app"
+];
+
 const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "DELETE"]
   }
 });
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:5173"
+  origin: allowedOrigins
 }));
 app.use(express.json());
 app.use(morgan('dev'));
