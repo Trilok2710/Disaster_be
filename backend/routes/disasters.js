@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const supabase = require('../supabaseClient');
 const mockAuth = require('../middleware/auth');
-const axios = require('axios');
+const { geocodeLocation } = require('./geocode');
 
 // GET /disasters?tag=flood (public)
 router.get('/', async (req, res) => {
@@ -34,10 +34,7 @@ router.post('/', async (req, res) => {
 
   try {
     // Step 1: Geocode the description to get coordinates and location name
-    const geocodeResponse = await axios.post(`${process.env.API_BASE_URL}/geocode`, { description }, {
-      headers: { Authorization: 'Bearer netrunnerX' }
-    });
-    const { lat, lon, location_name } = geocodeResponse.data;
+    const { lat, lon, location_name } = await geocodeLocation(description);
 
     if (!lat || !lon) {
       return res.status(400).json({ error: 'Could not geocode a location from the description.' });
@@ -62,11 +59,8 @@ router.post('/', async (req, res) => {
 
   } catch (geocodeError) {
     console.error('Geocoding API call failed:', geocodeError.message);
-    // Check if the error is from the geocoding service itself (e.g., 404 Not Found)
-    if (geocodeError.response) {
-        return res.status(geocodeError.response.status).json({ 
-            error: `Failed to geocode location: ${geocodeError.response.data.error || geocodeError.message}`
-        });
+    if (geocodeError.message.includes('Could not extract') || geocodeError.message.includes('Could not find')) {
+      return res.status(400).json({ error: geocodeError.message });
     }
     return res.status(500).json({ error: 'An internal server error occurred during geocoding.' });
   }

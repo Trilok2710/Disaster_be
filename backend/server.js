@@ -32,7 +32,7 @@ app.set('io', io);
 const disastersRouter = require('./routes/disasters');
 app.use('/disasters', disastersRouter);
 
-const geocodeRouter = require('./routes/geocode');
+const { router: geocodeRouter } = require('./routes/geocode');
 app.use('/geocode', geocodeRouter);
 
 const resourcesRouter = require('./routes/resources');
