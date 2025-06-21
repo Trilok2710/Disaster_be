@@ -46,10 +46,10 @@ const { router: geocodeRouter } = require('./routes/geocode');
 app.use('/geocode', geocodeRouter);
 
 const resourcesRouter = require('./routes/resources');
-app.use('/', resourcesRouter);
+app.use('/resources', resourcesRouter);
 
 const reportsRouter = require('./routes/reports');
-app.use('/', reportsRouter);
+app.use('/reports', reportsRouter);
 
 const socialRoutes = require('./routes/social');
 app.use('/social', socialRoutes);
