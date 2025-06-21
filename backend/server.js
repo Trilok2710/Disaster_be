@@ -42,7 +42,11 @@ app.set('io', io);
 const disastersRouter = require('./routes/disasters');
 app.use('/disasters', disastersRouter);
 
-const { router: geocodeRouter } = require('./routes/geocode');
+const geocodeModule = require('./routes/geocode');
+const geocodeRouter = geocodeModule.router || geocodeModule;
+if (!geocodeRouter) {
+  console.error('Geocode router is undefined!');
+}
 app.use('/geocode', geocodeRouter);
 
 const resourcesRouter = require('./routes/resources');
