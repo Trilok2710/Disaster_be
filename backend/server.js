@@ -68,16 +68,6 @@ app.get('/', (req, res) => {
   res.send('Disaster Response Coordination Platform Backend is running.');
 });
 
-app.get('/geocode', async (req, res) => {
-  const { location } = req.query;
-  try {
-    const coords = await geocodeWithNominatim(location);
-    res.json(coords);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
 const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
