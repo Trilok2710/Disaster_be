@@ -40,28 +40,53 @@ app.use(morgan('dev'));
 app.set('io', io);
 
 const disastersRouter = require('./routes/disasters');
+if (!disastersRouter) {
+  console.error('Disasters router is undefined!');
+  process.exit(1);
+}
 app.use('/disasters', disastersRouter);
 
 const geocodeModule = require('./routes/geocode');
 const geocodeRouter = geocodeModule.router || geocodeModule;
 if (!geocodeRouter) {
   console.error('Geocode router is undefined!');
+  process.exit(1);
 }
 app.use('/geocode', geocodeRouter);
 
 const resourcesRouter = require('./routes/resources');
+if (!resourcesRouter) {
+  console.error('Resources router is undefined!');
+  process.exit(1);
+}
 app.use('/resources', resourcesRouter);
 
 const reportsRouter = require('./routes/reports');
+if (!reportsRouter) {
+  console.error('Reports router is undefined!');
+  process.exit(1);
+}
 app.use('/reports', reportsRouter);
 
 const socialRoutes = require('./routes/social');
+if (!socialRoutes) {
+  console.error('Social routes is undefined!');
+  process.exit(1);
+}
 app.use('/social', socialRoutes);
 
 const officialRoutes = require('./routes/official');
+if (!officialRoutes) {
+  console.error('Official routes is undefined!');
+  process.exit(1);
+}
 app.use('/official', officialRoutes);
 
 const verifyRoutes = require('./routes/verify');
+if (!verifyRoutes) {
+  console.error('Verify routes is undefined!');
+  process.exit(1);
+}
 app.use('/verify', verifyRoutes);
 
 app.get('/', (req, res) => {

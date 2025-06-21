@@ -107,8 +107,8 @@ router.delete('/:id', async (req, res) => {
   res.status(204).send();
 });
 
-// DELETE /disasters (admin only, delete all disasters)
-router.delete('/', async (req, res) => {
+// DELETE /disasters/all (admin only, delete all disasters)
+router.delete('/all', async (req, res) => {
   if (req.user.role !== 'admin') {
     return res.status(403).json({ error: 'Forbidden: admin only' });
   }
