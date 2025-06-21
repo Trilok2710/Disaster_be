@@ -70,18 +70,22 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
   const updates = req.body;
+  
   // Fetch disaster to check ownership
   const { data: disaster, error: fetchError } = await supabase.from('disasters').select('*').eq('id', id).single();
   if (fetchError || !disaster) return res.status(404).json({ error: 'Disaster not found' });
   if (!(req.user.role === 'admin' || disaster.owner_id === req.user.username)) {
     return res.status(403).json({ error: 'Forbidden' });
   }
+  
   // Update audit trail
   const audit_trail = Array.isArray(disaster.audit_trail) ? disaster.audit_trail : [];
   audit_trail.push({ action: 'update', user_id: req.user.username, timestamp: new Date().toISOString() });
   updates.audit_trail = audit_trail;
+  
   const { data, error } = await supabase.from('disasters').update(updates).eq('id', id).select();
   if (error) return res.status(500).json({ error: error.message });
+  
   // Emit Socket.IO event
   req.app.get('io').emit('disaster_updated', { type: 'update', disaster: data[0] });
   res.json(data[0]);
@@ -90,32 +94,24 @@ router.put('/:id', async (req, res) => {
 // DELETE /disasters/:id
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
+  
   // Fetch disaster to check ownership
   const { data: disaster, error: fetchError } = await supabase.from('disasters').select('*').eq('id', id).single();
   if (fetchError || !disaster) return res.status(404).json({ error: 'Disaster not found' });
   if (!(req.user.role === 'admin' || disaster.owner_id === req.user.username)) {
     return res.status(403).json({ error: 'Forbidden' });
   }
+  
   // Update audit trail before delete
   const audit_trail = Array.isArray(disaster.audit_trail) ? disaster.audit_trail : [];
   audit_trail.push({ action: 'delete', user_id: req.user.username, timestamp: new Date().toISOString() });
   await supabase.from('disasters').update({ audit_trail }).eq('id', id);
+  
   const { error } = await supabase.from('disasters').delete().eq('id', id);
   if (error) return res.status(500).json({ error: error.message });
+  
   // Emit Socket.IO event
   req.app.get('io').emit('disaster_updated', { type: 'delete', id });
-  res.status(204).send();
-});
-
-// DELETE /disasters/all (admin only, delete all disasters)
-router.delete('/all', async (req, res) => {
-  if (req.user.role !== 'admin') {
-    return res.status(403).json({ error: 'Forbidden: admin only' });
-  }
-  const { error } = await supabase.from('disasters').delete().gt('id', '');
-  if (error) return res.status(500).json({ error: error.message });
-  // Emit Socket.IO event
-  req.app.get('io').emit('disaster_updated', { type: 'delete_all' });
   res.status(204).send();
 });
 
