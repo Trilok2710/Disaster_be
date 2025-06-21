@@ -10,7 +10,7 @@ const app = express();
 const server = http.createServer(app);
 
 const allowedOrigins = [
- 
+  "http://localhost:5173",
   "https://disaster-be-j9jy.vercel.app",
   "https://disaster-be-m7ge.vercel.app"
 ];
@@ -18,12 +18,21 @@ const allowedOrigins = [
 const io = new Server(server, {
   cors: {
     origin: allowedOrigins,
-    methods: ["GET", "POST", "PUT", "DELETE"]
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true
   }
 });
+
 app.use(cors({
-  origin: allowedOrigins
+  origin: allowedOrigins,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true,
+  optionsSuccessStatus: 200
 }));
+
+// Handle preflight requests globally
+app.options('*', cors());
+
 app.use(express.json());
 app.use(morgan('dev'));
 
