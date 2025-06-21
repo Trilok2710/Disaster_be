@@ -156,7 +156,8 @@ function App() {
         width: '100vw',
         background: backgrounds[bgTheme].background,
         transition: 'background 0.7s cubic-bezier(.4,2,.3,1)',
-        fontSize: '0.96rem',
+        fontSize: { xs: '0.9rem', sm: '0.96rem' },
+        overflowX: 'hidden',
       }}
     >
       <Header tab={tab} setTab={setTab} />
@@ -164,16 +165,16 @@ function App() {
         sx={{
           maxWidth: '100%',
           px: 0,
-          py: { xs: 2, sm: 4 },
-          mt: 3,
+          py: { xs: 1, sm: 2, md: 4 },
+          mt: { xs: 1, sm: 2, md: 3 },
         }}
       >
         {tab === 0 && (
           <Box ref={reportsRef}>
             {loading ? (
-              <CircularProgress sx={{ display: 'block', mx: 'auto', mt: 10 }} />
+              <CircularProgress sx={{ display: 'block', mx: 'auto', mt: { xs: 5, sm: 10 } }} />
             ) : (
-              <Box sx={{ width: '100%', px: { xs: 1, sm: 4 } }}>
+              <Box sx={{ width: '100%', px: { xs: 0.5, sm: 2, md: 4 } }}>
                 <DisasterList disasters={disasters} onDisasterClick={handleDisasterClick} highlightId={highlightId} />
               </Box>
             )}
@@ -183,12 +184,13 @@ function App() {
               onClick={handleOpen}
               sx={{
                 position: 'fixed',
-                bottom: 32,
-                right: 32,
+                bottom: { xs: 16, sm: 24, md: 32 },
+                right: { xs: 16, sm: 24, md: 32 },
                 boxShadow: 6,
                 '& .MuiSvgIcon-root': {
                   transition: 'margin-right 0.25s ease',
                 },
+                zIndex: 1000,
               }}
               onMouseEnter={() => setIsFabHovered(true)}
               onMouseLeave={() => setIsFabHovered(false)}
@@ -238,13 +240,13 @@ function App() {
           <Box
             ref={mapRef}
             sx={{
-              mx: { xs: 1, sm: 4 },
-              mt: 2,
-              borderRadius: 4,
+              mx: { xs: 0.5, sm: 2, md: 4 },
+              mt: { xs: 1, sm: 2 },
+              borderRadius: { xs: 2, sm: 4 },
               overflow: 'hidden',
               boxShadow: 6,
-              height: '60vh',
-              minHeight: 350,
+              height: { xs: '50vh', sm: '55vh', md: '60vh' },
+              minHeight: { xs: 300, sm: 350, md: 400 },
             }}
           >
             <DisasterMap disasters={disasters} fullSize={true} />
