@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const supabase = require('../supabaseClient');
-const mockAuth = require('../middleware/auth');
+const mockAuth = require('./middleware/auth');
 const { geocodeLocation } = require('./geocode');
 
 // GET /disasters?tag=flood (public)
