@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import socket from '../socket';
 
 export default function ResourceTab({ disaster }) {
+  const AUTH_HEADER = { Authorization: 'Bearer netrunnerX' };
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({ name: '', location_name: '', type: '', lat: '', lon: '' });
@@ -49,7 +50,7 @@ export default function ResourceTab({ disaster }) {
     if (!confirmDelete) return;
     try {
       await axios.delete(`${import.meta.env.VITE_API_URL}/resources/${confirmDelete.id}`, {
-        headers: { Authorization: 'Bearer netrunnerX' }
+        headers: AUTH_HEADER
       });
       setSnackbar({ open: true, message: 'Resource deleted!', severity: 'success' });
     } catch (err) {

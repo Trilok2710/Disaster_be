@@ -12,7 +12,7 @@ function isPriority(content) {
   return /urgent|sos|emergency/i.test(content);
 }
 
-const AUTH_HEADER = { headers: { Authorization: 'Bearer netrunnerX' } };
+const AUTH_HEADER = { Authorization: 'Bearer netrunnerX' };
 
 function VerifiedStatus({ image_url }) {
   const [status, setStatus] = useState(null);
