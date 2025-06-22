@@ -18,14 +18,12 @@ export default function ResourceTab({ disaster }) {
   const [confirmDelete, setConfirmDelete] = useState(null);
 
   const fetchResources = () => {
-    if (!disaster) return;
-    setLoading(true);
-    axios.get(`${import.meta.env.VITE_API_URL}/disasters/${disaster.id}/resources`, {
-      headers: { Authorization: 'Bearer netrunnerX' }
+    if (!disaster?.id) return;
+    axios.get(`${import.meta.env.VITE_API_URL}/resources/${disaster.id}`, {
+      headers: AUTH_HEADER
     })
-      .then(res => setResources(res.data))
-      .catch(() => setResources([]))
-      .finally(() => setLoading(false));
+    .then(res => setResources(res.data))
+    .catch(() => setResources([]))
   };
 
   useEffect(() => {
@@ -88,8 +86,8 @@ export default function ResourceTab({ disaster }) {
         setFormLoading(false);
         return;
       }
-      await axios.post(`${import.meta.env.VITE_API_URL}/disasters/${disaster.id}/resources`, form, {
-        headers: { Authorization: 'Bearer netrunnerX' }
+      await axios.post(`${import.meta.env.VITE_API_URL}/resources/${disaster.id}`, form, {
+        headers: AUTH_HEADER
       });
       setForm({ name: '', location_name: '', type: '', lat: '', lon: '' });
     } catch (e) {

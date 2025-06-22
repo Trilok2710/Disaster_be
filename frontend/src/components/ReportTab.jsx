@@ -52,12 +52,10 @@ export default function ReportTab({ disaster }) {
   const [confirmDelete, setConfirmDelete] = useState(null);
 
   const fetchReports = () => {
-    if (!disaster) return;
-    setLoading(true);
-    axios.get(`${import.meta.env.VITE_API_URL}/disasters/${disaster.id}/reports`, AUTH_HEADER)
-      .then(res => setReports(res.data))
-      .catch(() => setReports([]))
-      .finally(() => setLoading(false));
+    if (!disaster?.id) return;
+    axios.get(`${import.meta.env.VITE_API_URL}/reports/${disaster.id}`, AUTH_HEADER)
+    .then(res => setReports(res.data))
+    .catch(() => setReports([]))
   };
 
   useEffect(() => {
@@ -105,7 +103,7 @@ export default function ReportTab({ disaster }) {
         setFormLoading(false);
         return;
       }
-      await axios.post(`${import.meta.env.VITE_API_URL}/disasters/${disaster.id}/reports`, form, AUTH_HEADER);
+      await axios.post(`${import.meta.env.VITE_API_URL}/reports/${disaster.id}`, form, AUTH_HEADER);
       setForm({ content: '', image_url: '' });
     } catch (e) {
       setError('Failed to add report.');

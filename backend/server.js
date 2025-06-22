@@ -48,13 +48,21 @@ const mountRouter = (path, routerModule) => {
   app.use(path, routerModule);
 };
 
+console.log('Mounting /disasters...');
 mountRouter('/disasters', require('./routes/disasters'));
+console.log('Mounting /geocode...');
 mountRouter('/geocode', require('./routes/geocode').router);
+console.log('Mounting /resources...');
 mountRouter('/resources', require('./routes/resources'));
+console.log('Mounting /reports...');
 mountRouter('/reports', require('./routes/reports'));
+console.log('Mounting /social...');
 mountRouter('/social', require('./routes/social'));
+console.log('Mounting /official...');
 mountRouter('/official', require('./routes/official'));
+console.log('Mounting /verify...');
 mountRouter('/verify', require('./routes/verify'));
+console.log('All routers mounted.');
 
 // Health check endpoint
 app.get('/health', (req, res) => {

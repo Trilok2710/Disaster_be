@@ -8,6 +8,8 @@ export default function DisasterList({ disasters, onDisasterClick, highlightId }
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.down('md'));
   
+//   console.log("Disasters data received by list component:", disasters);
+
   // Sort disasters so the newest (by created_at) is first
   const sortedDisasters = [...disasters].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 

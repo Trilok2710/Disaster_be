@@ -7,6 +7,7 @@ import ReportTab from './ReportTab';
 import DisasterForm from './DisasterForm';
 import axios from 'axios';
 
+
 export default function DisasterDetailsModal({ open, onClose, disaster }) {
   const [tab, setTab] = useState(0);
   const [editMode, setEditMode] = useState(false);
@@ -19,7 +20,7 @@ export default function DisasterDetailsModal({ open, onClose, disaster }) {
   const handleDelete = async () => {
     setLoading(true);
     try {
-      await axios.delete(`http://localhost:4000/disasters/${disaster.id}`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/disasters/${disaster.id}`, {
         headers: { Authorization: 'Bearer netrunnerX' }
       });
       setSnackbar({ open: true, message: 'Disaster deleted!', severity: 'success' });
@@ -37,7 +38,7 @@ export default function DisasterDetailsModal({ open, onClose, disaster }) {
   const handleUpdate = async (formData) => {
     setLoading(true);
     try {
-      await axios.put(`http://localhost:4000/disasters/${disaster.id}`, formData, {
+      await axios.put(`${import.meta.env.VITE_API_URL}/disasters/${disaster.id}`, formData, {
         headers: { Authorization: 'Bearer netrunnerX' }
       });
       setSnackbar({ open: true, message: 'Disaster updated!', severity: 'success' });
