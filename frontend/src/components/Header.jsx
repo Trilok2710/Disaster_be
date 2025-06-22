@@ -120,40 +120,7 @@ export default function Header({ tab, setTab }) {
             </IconButton>
           )}
 
-          {/* Logo/Title */}
-          <Box sx={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            flex: isMobile ? 1 : 'none',
-            minWidth: 0
-          }}>
-            {!isMobile && (
-              <WarningAmberRoundedIcon 
-                fontSize="inherit" 
-                sx={{ 
-                  fontSize: { md: 54, lg: 60 }, 
-                  color: '#d32f2f', 
-                  filter: 'drop-shadow(0 0 12px #ff1744aa)',
-                  mr: 2
-                }} 
-              />
-            )}
-            <Typography 
-              variant={isMobile ? "h6" : "h5"} 
-              sx={{ 
-                color: '#d32f2f', 
-                fontWeight: 'bold',
-                display: { xs: 'none', sm: 'block' },
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis'
-              }}
-            >
-              Disaster Response
-            </Typography>
-          </Box>
-
-          {/* Desktop Tabs */}
+          {/* Desktop Tabs - Now on the left */}
           {!isMobile && (
             <Tabs
               value={tab}
@@ -187,6 +154,40 @@ export default function Header({ tab, setTab }) {
               ))}
             </Tabs>
           )}
+
+          {/* Logo/Title - Now on the right for desktop */}
+          <Box sx={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            flex: isMobile ? 1 : 'none',
+            minWidth: 0,
+            justifyContent: isMobile ? 'flex-start' : 'flex-end'
+          }}>
+            {!isMobile && (
+              <WarningAmberRoundedIcon 
+                fontSize="inherit" 
+                sx={{ 
+                  fontSize: { md: 54, lg: 60 }, 
+                  color: '#d32f2f', 
+                  filter: 'drop-shadow(0 0 12px #ff1744aa)',
+                  mr: 2
+                }} 
+              />
+            )}
+            <Typography 
+              variant={isMobile ? "h6" : "h5"} 
+              sx={{ 
+                color: '#d32f2f', 
+                fontWeight: 'bold',
+                display: { xs: 'none', sm: 'block' },
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }}
+            >
+              Disaster Response
+            </Typography>
+          </Box>
 
           {/* Mobile Current Tab Indicator */}
           {isMobile && (

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dialog, DialogActions, DialogTitle, DialogContent, Box, Typography, List, ListItem, ListItemText, Divider, TextField, Button, Stack, CircularProgress, Fade, Snackbar, Alert, IconButton, Chip } from '@mui/material';
+import { Dialog, DialogActions, DialogTitle, DialogContent, Box, Typography, List, ListItem, ListItemText, Divider, TextField, Button, Stack, CircularProgress, Fade, Snackbar, Alert, IconButton, Chip, Backdrop } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 import { motion } from 'framer-motion';
@@ -11,6 +11,7 @@ export default function ResourceTab({ disaster }) {
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({ name: '', location_name: '', type: '', lat: '', lon: '' });
   const [formLoading, setFormLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const [extracting, setExtracting] = useState(false);
   const [error, setError] = useState('');
   const [highlightId, setHighlightId] = useState(null);
@@ -60,6 +61,7 @@ export default function ResourceTab({ disaster }) {
   const handleDelete = async () => {
     if (!confirmDelete) return;
     try {
+      setDeleteLoading(true);
       await axios.delete(`${import.meta.env.VITE_API_URL}/resources/${confirmDelete.id}`, {
         headers: AUTH_HEADER
       });
@@ -68,6 +70,7 @@ export default function ResourceTab({ disaster }) {
       setSnackbar({ open: true, message: 'Failed to delete resource.', severity: 'error' });
     } finally {
       setConfirmDelete(null);
+      setDeleteLoading(false);
     }
   };
 
@@ -219,6 +222,23 @@ export default function ResourceTab({ disaster }) {
             </DialogActions>
           </Dialog>
         )}
+
+        {/* Loading Backdrop for Delete Operations */}
+        <Backdrop
+          sx={{ 
+            color: '#fff', 
+            zIndex: (theme) => theme.zIndex.drawer + 1,
+            backgroundColor: 'rgba(0, 0, 0, 0.7)'
+          }}
+          open={deleteLoading}
+        >
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+            <CircularProgress color="inherit" size={60} />
+            <Typography variant="h6" sx={{ color: 'white' }}>
+              Deleting Resource...
+            </Typography>
+          </Box>
+        </Backdrop>
       </Box>
     </Fade>
   );

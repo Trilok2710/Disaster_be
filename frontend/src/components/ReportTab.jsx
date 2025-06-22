@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, List, ListItem, ListItemText, Divider, TextField, Button, Stack, CircularProgress, Fade, Chip, Snackbar, Alert, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import { Box, Typography, List, ListItem, ListItemText, Divider, TextField, Button, Stack, CircularProgress, Fade, Chip, Snackbar, Alert, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Backdrop } from '@mui/material';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import socket from '../socket';
@@ -45,6 +45,7 @@ export default function ReportTab({ disaster }) {
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({ content: '', image_url: '' });
   const [formLoading, setFormLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const [error, setError] = useState('');
   const [highlightId, setHighlightId] = useState(null);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
@@ -91,12 +92,14 @@ export default function ReportTab({ disaster }) {
   const handleDelete = async () => {
     if (!confirmDelete) return;
     try {
+      setDeleteLoading(true);
       await axios.delete(`${import.meta.env.VITE_API_URL}/reports/${confirmDelete.id}`, { headers: AUTH_HEADER });
       setSnackbar({ open: true, message: 'Report deleted!', severity: 'success' });
     } catch (err) {
       setSnackbar({ open: true, message: 'Failed to delete report.', severity: 'error' });
     } finally {
       setConfirmDelete(null);
+      setDeleteLoading(false);
     }
   };
 
@@ -235,6 +238,23 @@ export default function ReportTab({ disaster }) {
             </DialogActions>
           </Dialog>
         )}
+
+        {/* Loading Backdrop for Delete Operations */}
+        <Backdrop
+          sx={{ 
+            color: '#fff', 
+            zIndex: (theme) => theme.zIndex.drawer + 1,
+            backgroundColor: 'rgba(0, 0, 0, 0.7)'
+          }}
+          open={deleteLoading}
+        >
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+            <CircularProgress color="inherit" size={60} />
+            <Typography variant="h6" sx={{ color: 'white' }}>
+              Deleting Report...
+            </Typography>
+          </Box>
+        </Backdrop>
       </Box>
     </Fade>
   );
