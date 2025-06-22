@@ -53,9 +53,20 @@ export default function ReportTab({ disaster }) {
 
   const fetchReports = () => {
     if (!disaster?.id) return;
-    axios.get(`${import.meta.env.VITE_API_URL}/reports/${disaster.id}`, AUTH_HEADER)
-    .then(res => setReports(res.data))
-    .catch(() => setReports([]))
+    const url = `${import.meta.env.VITE_API_URL}/reports/${disaster.id}`;
+    console.log('Fetching reports from:', url);
+    console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);
+    axios.get(url, AUTH_HEADER)
+    .then(res => {
+      console.log('Reports fetched successfully:', res.data);
+      setReports(res.data);
+      setLoading(false);
+    })
+    .catch((error) => {
+      console.error('Error fetching reports:', error);
+      setReports([]);
+      setLoading(false);
+    })
   };
 
   useEffect(() => {

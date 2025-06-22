@@ -20,11 +20,22 @@ export default function ResourceTab({ disaster }) {
 
   const fetchResources = () => {
     if (!disaster?.id) return;
-    axios.get(`${import.meta.env.VITE_API_URL}/resources/${disaster.id}`, {
+    const url = `${import.meta.env.VITE_API_URL}/resources/${disaster.id}`;
+    console.log('Fetching resources from:', url);
+    console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);
+    axios.get(url, {
       headers: AUTH_HEADER
     })
-    .then(res => setResources(res.data))
-    .catch(() => setResources([]))
+    .then(res => {
+      console.log('Resources fetched successfully:', res.data);
+      setResources(res.data);
+      setLoading(false);
+    })
+    .catch((error) => {
+      console.error('Error fetching resources:', error);
+      setResources([]);
+      setLoading(false);
+    })
   };
 
   useEffect(() => {
