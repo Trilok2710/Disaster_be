@@ -39,14 +39,30 @@ app.use(morgan('dev'));
 // Make io accessible in routes
 app.set('io', io);
 
-// Mount routes
-app.use('/disasters', require('./routes/disasters'));
-app.use('/geocode', require('./routes/geocode').router);
-app.use('/resources', require('./routes/resources'));
-app.use('/reports', require('./routes/reports'));
-app.use('/social', require('./routes/social'));
-app.use('/official', require('./routes/official'));
-app.use('/verify', require('./routes/verify'));
+// Defensive router mounting
+const mountRouter = (path, routerModule) => {
+  if (!routerModule) {
+    console.error(`[FATAL] Router for path '${path}' is undefined. The module might be missing 'module.exports'.`);
+    process.exit(1); // Exit immediately if a router is missing
+  }
+  app.use(path, routerModule);
+};
+
+mountRouter('/disasters', require('./routes/disasters'));
+mountRouter('/geocode', require('./routes/geocode').router);
+mountRouter('/resources', require('./routes/resources'));
+mountRouter('/reports', require('./routes/reports'));
+mountRouter('/social', require('./routes/social'));
+mountRouter('/official', require('./routes/official'));
+mountRouter('/verify', require('./routes/verify'));
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'up', 
+    timestamp: new Date().toISOString() 
+  });
+});
 
 app.get('/', (req, res) => {
   res.send('Disaster Response Coordination Platform Backend is running.');
