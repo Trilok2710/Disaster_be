@@ -114,10 +114,20 @@ export default function ReportTab({ disaster }) {
         setFormLoading(false);
         return;
       }
-      await axios.post(`${import.meta.env.VITE_API_URL}/reports/${disaster.id}`, form, AUTH_HEADER);
+      const url = `${import.meta.env.VITE_API_URL}/reports/${disaster.id}`;
+      console.log('Creating report at:', url);
+      console.log('Form data:', form);
+      console.log('Auth header:', AUTH_HEADER);
+      
+      const response = await axios.post(url, form, AUTH_HEADER);
+      console.log('Report created successfully:', response.data);
       setForm({ content: '', image_url: '' });
+      setSnackbar({ open: true, message: 'Report created successfully!', severity: 'success' });
     } catch (e) {
-      setError('Failed to add report.');
+      console.error('Error creating report:', e);
+      console.error('Error response:', e.response?.data);
+      console.error('Error status:', e.response?.status);
+      setError(`Failed to add report: ${e.response?.data?.error || e.message}`);
     } finally {
       setFormLoading(false);
     }

@@ -98,12 +98,22 @@ export default function ResourceTab({ disaster }) {
         setFormLoading(false);
         return;
       }
-      await axios.post(`${import.meta.env.VITE_API_URL}/resources/${disaster.id}`, form, {
+      const url = `${import.meta.env.VITE_API_URL}/resources/${disaster.id}`;
+      console.log('Creating resource at:', url);
+      console.log('Form data:', form);
+      console.log('Auth header:', AUTH_HEADER);
+      
+      const response = await axios.post(url, form, {
         headers: AUTH_HEADER
       });
+      console.log('Resource created successfully:', response.data);
       setForm({ name: '', location_name: '', type: '', lat: '', lon: '' });
+      setSnackbar({ open: true, message: 'Resource created successfully!', severity: 'success' });
     } catch (e) {
-      setError('Failed to add resource.');
+      console.error('Error creating resource:', e);
+      console.error('Error response:', e.response?.data);
+      console.error('Error status:', e.response?.status);
+      setError(`Failed to add resource: ${e.response?.data?.error || e.message}`);
     } finally {
       setFormLoading(false);
     }
