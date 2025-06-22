@@ -56,7 +56,7 @@ export default function ReportTab({ disaster }) {
     const url = `${import.meta.env.VITE_API_URL}/reports/${disaster.id}`;
     console.log('Fetching reports from:', url);
     console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);
-    axios.get(url, AUTH_HEADER)
+    axios.get(url, { headers: AUTH_HEADER })
     .then(res => {
       console.log('Reports fetched successfully:', res.data);
       setReports(res.data);
@@ -91,7 +91,7 @@ export default function ReportTab({ disaster }) {
   const handleDelete = async () => {
     if (!confirmDelete) return;
     try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/reports/${confirmDelete.id}`, AUTH_HEADER);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/reports/${confirmDelete.id}`, { headers: AUTH_HEADER });
       setSnackbar({ open: true, message: 'Report deleted!', severity: 'success' });
     } catch (err) {
       setSnackbar({ open: true, message: 'Failed to delete report.', severity: 'error' });
@@ -119,7 +119,7 @@ export default function ReportTab({ disaster }) {
       console.log('Form data:', form);
       console.log('Auth header:', AUTH_HEADER);
       
-      const response = await axios.post(url, form, AUTH_HEADER);
+      const response = await axios.post(url, form, { headers: AUTH_HEADER });
       console.log('Report created successfully:', response.data);
       setForm({ content: '', image_url: '' });
       setSnackbar({ open: true, message: 'Report created successfully!', severity: 'success' });
